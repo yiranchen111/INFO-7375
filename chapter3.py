@@ -90,39 +90,39 @@ def one_vs_all_train(X_train, Y_train, num_classes, num_iterations, learning_rat
     W_all = []
     b_all = []
     
-    # 对每个类别分别训练感知器
+ 
     for class_label in range(num_classes):
         W, b = initialize_parameters(X_train.shape[1])
-        Y_binary = np.where(Y_train == class_label, 1, 0)  # 将标签二值化，当前类别为1，其余为0
+        Y_binary = np.where(Y_train == class_label, 1, 0) 
         
-        # 对每个类别的感知器进行训练
+       
         for i in range(num_iterations):
             A = forward_propagation(X_train, W, b)
             loss = loss_function(A, Y_binary)
             dW, db = backward_propagation(X_train, A, Y_binary)
             W, b = update_parameters(W, b, dW, db, learning_rate)
             
-            # 每100次迭代打印一次损失
+          
             if i % 100 == 0:
                 print(f"Class {class_label}, Iteration {i}, Loss: {loss}")
         
-        # 保存每个类别的权重和偏置
+       
         W_all.append(W)
         b_all.append(b)
     
     return W_all, b_all
 
-# One-vs-All 的预测方法
+
 def one_vs_all_predict(X_test, W_all, b_all):
     scores = []
     
-    # 对每个类别的感知器计算得分
+    
     for W, b in zip(W_all, b_all):
         A = forward_propagation(X_test, W, b)
         scores.append(A)
     
-    scores = np.hstack(scores)  # 将每个类别的得分拼接成一个矩阵
-    predictions = np.argmax(scores, axis=1)  # 返回得分最高的类别作为预测结果
+    scores = np.hstack(scores)  
+    predictions = np.argmax(scores, axis=1)  
     return predictions
 
 
@@ -135,14 +135,14 @@ if __name__ == '__main__':
     X_train, Y_train = load_images_from_folder(train_image_folder, labeled=True)
     X_test = load_images_from_folder(test_image_folder, labeled=False)
 
-    num_classes = 10  # 0-9 共10个类别
-    num_iterations = 1000  # 每个感知器的训练迭代次数
-    learning_rate = 0.01  # 学习率
+    num_classes = 10  
+    num_iterations = 1000 
+    learning_rate = 0.01  
 
-    # 训练
+    # train
     W_all, b_all = one_vs_all_train(X_train, Y_train, num_classes, num_iterations, learning_rate)
 
-    # 预测
+    # test
     predictions = one_vs_all_predict(X_test, W_all, b_all)
     print("测试结果：", predictions)
     
