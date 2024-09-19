@@ -144,6 +144,6 @@ if __name__ == '__main__':
 
     # test
     predictions = one_vs_all_predict(X_test, W_all, b_all)
-    print("测试结果：", predictions)
+    print("Test Result：", predictions)
     
 
